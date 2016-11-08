@@ -1,4 +1,5 @@
 import java.awt.Color;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -9,6 +10,8 @@ import java.awt.event.KeyListener;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
+import java.applet.*;	//wavファイルの再生に使用
 
 public class main extends JApplet implements Runnable, KeyListener {
 
@@ -24,6 +27,7 @@ public class main extends JApplet implements Runnable, KeyListener {
     private Image img;     
     private Graphics offg;
     private int width, height;
+    
 
     @Override
     public void init() {
@@ -85,12 +89,16 @@ public class main extends JApplet implements Runnable, KeyListener {
                         x = 2 * paddleXL - x;
                         dx *= -1;
                         message = "";
+                        SoundPlayer sp = new SoundPlayer("../sounds/shot.wav");
+                        sp.play();
                     }
                 }
                 if (x < 0) {
                     x = -x;
                     dx *= -1;
                     message = "R won!";
+                    SoundPlayer sp = new SoundPlayer("../sounds/miss.wav");
+                    sp.play();
                 }
                 if (dx > 0 && (x - paddleXR) * (x - dx - paddleXR) <= 0) {
                     double rY = y + dy * (paddleXR - x) / dx;
@@ -98,20 +106,28 @@ public class main extends JApplet implements Runnable, KeyListener {
                         x = 2 * paddleXR - x;
                         dx *= -1;
                         message = "";
+                        SoundPlayer sp = new SoundPlayer("../sounds/shot.wav");
+                        sp.play();
                     }
                 }
                 if (x > xSize) {
                     x = 2 * xSize - x;
                     dx *= -1;
                     message = "L won!";
+                    SoundPlayer sp = new SoundPlayer("../sounds/miss.wav");
+                    sp.play();
                 }
                 if (y < 0) {
                     y = -y;
                     dy *= -1;
+                    SoundPlayer sp = new SoundPlayer("../sounds/reflect.wav");
+                    sp.play();
                 }
                 if (y > ySize) {
                     y = 2 * ySize - y;
                     dy *= -1;
+                    SoundPlayer sp = new SoundPlayer("../sounds/reflect.wav");
+                    sp.play();
                 }
                 repaint();
                 try {
@@ -147,6 +163,17 @@ public class main extends JApplet implements Runnable, KeyListener {
 
     public void keyReleased(KeyEvent e) {}
     public void keyTyped(KeyEvent e) {}
+    
+    
+    public class SoundPlay {
+    	private AudioClip clip;
+    	public void SoundPlay(String wavs){
+    		//音源の読み込み
+    		clip = Applet.newAudioClip(getClass().getResource(wavs));
+    		clip.play();	//音源の再生
+    	}
+    	
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
