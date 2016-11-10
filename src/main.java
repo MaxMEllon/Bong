@@ -11,7 +11,7 @@ import javax.swing.JApplet;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import java.applet.*;	//wav?t?@?C???̍Đ??Ɏg?p
+import java.applet.*;	//wav?t?@?C???ﾌ再�??ﾉ使?p
 
 public class main extends JApplet implements Runnable, KeyListener {
 
@@ -24,7 +24,7 @@ public class main extends JApplet implements Runnable, KeyListener {
     private double paddleSize;
     private String message;
     private Font font;
-    private int B_flag = 1;   //ブラインド用フラグ
+    private int B_flag = 1;   //繝悶Λ繧､繝ｳ繝臥畑繝輔Λ繧ｰ
     private int Llimit = 0;
     private int Rlimit = 0;
     private int L_flag, R_flag;
@@ -64,7 +64,7 @@ public class main extends JApplet implements Runnable, KeyListener {
         offg.drawRect(0, 0, xSize - 1, ySize - 1);
         offg.setColor(Color.MAGENTA.darker());
 
-        // フラグ起動中のみボール表示
+        // 繝輔Λ繧ｰ襍ｷ蜍穂ｸｭ縺ｮ縺ｿ繝懊�ｼ繝ｫ陦ｨ遉ｺ
         if (B_flag == 1) {
             offg.fillOval((int)(x - 3), (int)(y - 3), 6, 6);
         }
@@ -107,7 +107,7 @@ public class main extends JApplet implements Runnable, KeyListener {
                         x = 2 * paddleXL - x;
                         dx *= -1;
                         message = "";
-                        // 返したらゲージ増
+                        // 霑斐＠縺溘ｉ繧ｲ繝ｼ繧ｸ蠅�
                         L_flag = 0;
                         if ( Llimit < 40 ) { Llimit += 4; }
                         SoundPlayer sp = new SoundPlayer("../sounds/shot.wav");
@@ -118,7 +118,7 @@ public class main extends JApplet implements Runnable, KeyListener {
                     x = -x;
                     dx *= -1;
                     message = "R won!";
-                    R_flag = 0;
+                    R_flag = 0;    //到達したらゲージ減少終了
                     SoundPlayer sp = new SoundPlayer("../sounds/miss.wav");
                     sp.play();
                 }
@@ -199,9 +199,9 @@ public class main extends JApplet implements Runnable, KeyListener {
     public class SoundPlay {
     	private AudioClip clip;
     	public void SoundPlay(String wavs){
-    		//?????̓ǂݍ???
+    		//?????ﾌ読み�???
     		clip = Applet.newAudioClip(getClass().getResource(wavs));
-    		clip.play();	//?????̍Đ?
+    		clip.play();	//?????ﾌ再�?
     	}
     	
     }
