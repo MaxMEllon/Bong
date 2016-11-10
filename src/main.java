@@ -13,6 +13,7 @@ import javax.swing.SwingUtilities;
 public class main extends JApplet implements Runnable, KeyListener {
 
     private static final long serialVersionUID = 1L;
+    private static final int maxGageValue = 40;
     private Thread thread = null;
     private double x, dx, y, dy;
     private int xSize, ySize;
@@ -20,6 +21,10 @@ public class main extends JApplet implements Runnable, KeyListener {
     private double paddleSize;
     private String message;
     private Font font;
+    private int B_flag = 1;   //ブラインド用フラグ
+    private int Llimit = 0;
+    private int Rlimit = 0;
+    private int L_flag, R_flag;
 
     private Image img;     
     private Graphics offg;
@@ -54,7 +59,20 @@ public class main extends JApplet implements Runnable, KeyListener {
         offg.setColor(Color.BLACK);
         offg.drawRect(0, 0, xSize - 1, ySize - 1);
         offg.setColor(Color.MAGENTA.darker());
-        offg.fillOval((int)(x - 3), (int)(y - 3), 6, 6);
+
+        // フラグ起動中のみボール表示
+        if (B_flag == 1) {
+            offg.fillOval((int)(x - 3), (int)(y - 3), 6, 6);
+        }
+
+        if ( Llimit < maxGageValue ) { offg.setColor(Color.BLACK); }
+        else { offg.setColor(Color.RED); }
+        offg.drawRect(5, (int)(ySize-5), maxGageValue, 3);
+        offg.fillRect(5, (int)(ySize-5), Llimit, 3);
+        if ( Rlimit < maxGageValue ) { offg.setColor(Color.BLACK); }
+        else { offg.setColor(Color.RED); }
+        offg.drawRect((int)(xSize-45), (int)(ySize-5), 40, 3);
+        offg.fillRect((int)(xSize-45), (int)(ySize-5), Rlimit, 3);
 
         offg.setColor(Color.RED);
         offg.fillRect((int)(paddleXL - 2), (int)(paddleYL - paddleSize / 2), 4, (int)paddleSize);
@@ -65,9 +83,9 @@ public class main extends JApplet implements Runnable, KeyListener {
         offg.setColor(Color.GREEN.darker());
         offg.drawString(message, 5, ySize + 12);
         offg.setColor(Color.RED.darker());
-        offg.drawString("Left:  Z(D), W(U)", 5, ySize + 24);
+        offg.drawString("Left:  Z(D), W(U), S(B)", 5, ySize + 24);
         offg.setColor(Color.BLUE.darker());
-        offg.drawString("Right: M(D), I(U)", 5, ySize + 36);    
+        offg.drawString("Right: M(D), I(U), K(B)", 5, ySize + 36);    
 
         g.drawImage(img, 0, 0, this);
     }
@@ -85,12 +103,16 @@ public class main extends JApplet implements Runnable, KeyListener {
                         x = 2 * paddleXL - x;
                         dx *= -1;
                         message = "";
+                        // 返したらゲージ増
+                        L_flag = 0;
+                        if ( Llimit < 40 ) { Llimit += 4; }
                     }
                 }
                 if (x < 0) {
                     x = -x;
                     dx *= -1;
                     message = "R won!";
+                    R_flag = 0;
                 }
                 if (dx > 0 && (x - paddleXR) * (x - dx - paddleXR) <= 0) {
                     double rY = y + dy * (paddleXR - x) / dx;
@@ -98,12 +120,15 @@ public class main extends JApplet implements Runnable, KeyListener {
                         x = 2 * paddleXR - x;
                         dx *= -1;
                         message = "";
+                        R_flag = 0;
+                        if ( Rlimit < 40 ) { Rlimit += 40; }
                     }
                 }
                 if (x > xSize) {
                     x = 2 * xSize - x;
                     dx *= -1;
                     message = "L won!";
+                    L_flag = 0;
                 }
                 if (y < 0) {
                     y = -y;
@@ -118,6 +143,10 @@ public class main extends JApplet implements Runnable, KeyListener {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
                 }
+                if ( Llimit == 0 ) { L_flag = 0; B_flag = 1; }
+                if ( L_flag == 1 ) { Llimit--; B_flag = 0; }
+                if ( Rlimit == 0 ) { R_flag = 0; B_flag = 1; }
+                if ( R_flag == 1 ) { Rlimit--; B_flag = 0; }
             }
         }   
     }
@@ -142,6 +171,8 @@ public class main extends JApplet implements Runnable, KeyListener {
         case 'Z':  paddleYL += 10; break;
         case 'I':  paddleYR -= 10; break;
         case 'M':  paddleYR += 10; break;
+        case 'S':  if ( Llimit == maxGageValue ) { L_flag = 1; } break;
+        case 'K':  if ( Rlimit == maxGageValue ) { R_flag = 1; } break;
         }
     }
 
