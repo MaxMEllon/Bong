@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Base.BongPanel;
+import Base.SoundPlayer;
 
 public class Game extends BongPanel {
     
@@ -62,12 +63,18 @@ public class Game extends BongPanel {
         case 68:
             barList.get(0).moveToRight();
             break;
+        case 69:
+            Runnable warpBall = () -> this.field.warpBallByPlayer1();
+            statusList.get(0).warpBall(warpBall);
+            break;
         case 87:
             barList.get(0).moveToUp();
             break;
         case 81:
             Runnable showBall = () -> this.field.showBall();
             if (statusList.get(0).executeHiddenBall(showBall)) {
+                SoundPlayer hiddenSound = new SoundPlayer("./Sounds/hidden.wav");
+                hiddenSound.play();
                 this.field.hiddenBallByPlayer1();
             }
             break;
@@ -87,9 +94,15 @@ public class Game extends BongPanel {
         case 40:
             barList.get(1).moveToDown();
             break;
+        case 46:
+            Runnable warpBall = () -> this.field.warpBallByPlayer2();
+            statusList.get(1).warpBall(warpBall);
+            break;
         case 47:
             Runnable showBall = () -> this.field.showBall();
             if (statusList.get(1).executeHiddenBall(showBall)) {
+                SoundPlayer hiddenSound = new SoundPlayer("./Sounds/hidden.wav");
+                hiddenSound.play();
                 this.field.hiddenBallByPlayer2();
             }
             break;

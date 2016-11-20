@@ -121,6 +121,22 @@ public class Ball extends BongPanel {
         }
     }
     
+    public void warp(PlayerType playerType) {
+        SoundPlayer warpSound = new SoundPlayer("./Sounds/warp.wav");
+        warpSound.play();
+        if (PlayerType.Player1 == playerType) {
+            this.dx = 4;
+            this.dy *= -2;
+            this.x += 100;
+            this.x %= (this.width - 200);
+        }
+        if (PlayerType.Player2 == playerType) {
+            this.dx = -4;
+            this.dy *= -2;
+            this.x -= 100;
+            if (this.x <= 200) this.x = 100;
+        }
+    }
     public void hiddenIfNeed(PlayerType playerType) {
         this.hidden = playerType;
     }
@@ -132,8 +148,8 @@ public class Ball extends BongPanel {
     private void update() {
         this.refrectBallByBar();
         this.refrectBallByWall();
-        if (dx == 6) dx = 1;
-        if (dx == -6) dx = -1;
+        if (Math.abs(dx) >= 6) this.dx = dx < 0 ? -1 : 1;
+        if (Math.abs(dy) >= 2) this.dy = dy < 0 ? -1 : 1;
         this.x += (dx * speed);
         this.y += (dy * speed);
     }

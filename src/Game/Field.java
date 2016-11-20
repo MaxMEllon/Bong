@@ -68,6 +68,14 @@ public class Field extends BongPanel {
         this.ball.hiddenIfNeed(PlayerType.Player2);
     }
     
+    public void warpBallByPlayer1() {
+        this.ball.warp(PlayerType.Player1);
+    }
+
+    public void warpBallByPlayer2() {
+        this.ball.warp(PlayerType.Player2);
+    }
+    
     @Override
     protected void paintBackground(Graphics2D g2d) {
         g2d.setColor(Color.BLACK);

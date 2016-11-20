@@ -108,9 +108,8 @@ public class GameApplet extends JApplet implements Runnable, KeyListener {
             missSound.play();
             sleep(500);
         } else if (this.state == GameState.GAME) {
-            // A: 65, S: 83, D: 68, W:87
-            // ←: 37, ↑: 38, →: 39, ↓:40, /:47
-            System.out.println(e.getKeyCode());
+            // A: 65, S: 83, D: 68, W:87, E:69
+            // ←: 37, ↑: 38, →: 39, ↓:40, /:47, .:46
             if (65 <= e.getKeyCode() && e.getKeyCode() <= 87) this.activeKeyForPlayer1 = e.getKeyCode();
             if (37 <= e.getKeyCode() && e.getKeyCode() <= 47) this.activeKeyForPlayer2 = e.getKeyCode();
         } else if (this.state == GameState.RESULT) {
