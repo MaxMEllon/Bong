@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import Base.BongPanel;
+import Base.SoundPlayer;
 
 public class Status extends BongPanel {
 
@@ -36,6 +37,13 @@ public class Status extends BongPanel {
     
     public void increaseSkillPoint() {
         if (this.power < GAGE_MAX_RANGE) this.power++;
+    }
+    
+    public void warpBall(Runnable callback) {
+        if (power >= 3) {
+            power -= 3;
+            callback.run();
+        }
     }
     
     private boolean isExecuteSkill = false;
