@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 import Base.BongPanel;
 
@@ -29,21 +27,32 @@ public class Bar extends BongPanel {
         this.paintBackground(g2d);
     }
     
-    public void moveToUp() {
-        if (this.y >= 0) {
-            this.y -= 20;
-        }
-    }
-    
     public int X() { return this.x; }
-    public int Y() { return this.x; }
+    public int Y() { return this.y; }
     public int Width() { return this.width; }
     public int Height() { return this.height; }
     public PlayerType PlayerType() { return this.playerType; }
     
+    public void moveToUp() {
+        if (this.y >= 0) { this.y -= 40; }
+    }
     public void moveToDown() {
-        if (this.y + this.height <= this.mapSize.height)  {
-            this.y += 20;
+        if (this.y + this.height <= this.mapSize.height)  { this.y += 40; }
+    }
+    
+    public void moveToRight() {
+        if (this.playerType == PlayerType.Player1) {
+            if (this.x < this.mapSize.width / 2) this.x += 30;
+        } else if (this.playerType == PlayerType.Player2) {
+            if (this.x < this.mapSize.width - 30) this.x += 30;
+        }
+    }
+
+    public void moveToLeft() {
+        if (this.playerType == PlayerType.Player1) {
+            if (this.x > 30) this.x -= 30;
+        } else if (this.playerType == PlayerType.Player2) {
+            if (this.x > this.mapSize.width / 2) this.x -= 30;
         }
     }
 

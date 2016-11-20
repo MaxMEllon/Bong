@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import javax.swing.JPanel;
 
 import Base.BongPanel;
@@ -39,7 +38,7 @@ public class Title extends BongPanel {
     private Font font = new Font("SansSerif", Font.BOLD, 160);
     
     private void animateColor(Graphics2D g2d) {
-        titleColorForAnimated += 20;
+        titleColorForAnimated += 10;
         titleColorForAnimated %= 250;
         if (titleColorForAnimated < 100) titleColorForAnimated = 100;
         Color color = new Color(20, 20, titleColorForAnimated);
@@ -47,7 +46,7 @@ public class Title extends BongPanel {
     }
     private void drawTitle(Graphics2D g2d) {
         g2d.setFont(font);
-        if (this.height / 2 > this.tilteHeightForAnimated) this.tilteHeightForAnimated += 3;
+        if (this.height / 2 > this.tilteHeightForAnimated) this.tilteHeightForAnimated += 8;
         else animateColor(g2d);
         g2d.drawString("NeoBong", this.width / 2 - 100, this.tilteHeightForAnimated);
     }

@@ -14,13 +14,28 @@ public class Ball extends BongPanel {
     private final int fieldHeight;
     private final int size;
     private ArrayList<Bar> barList;
+    private Runnable addSkilPointOfPlayer1;
+    private Runnable addSkilPointOfPlayer2;
+    private Runnable decreaseLifeOfPlayer1;
+    private Runnable decreaseLifeOfPlayer2;
+    private PlayerType currentBallOwner = PlayerType.DEFAULT;
+    private PlayerType hidden = PlayerType.DEFAULT;
 
-    public Ball(int x, int y, int width, int height, int fieldWidth, int fieldHeight, int size, ArrayList<Bar> barList) {
+    public Ball(int x, int y, int width, int height, int fieldWidth,
+            int fieldHeight, int size, ArrayList<Bar> barList,
+            Runnable addSkillPointOfPlayer1, Runnable addSkillPointOfPlayer2,
+            Runnable decreaseLifeOfPlayer1, Runnable decreaseLifeOfPlayer2
+            )
+    {
         super(x, y, width, height);
         this.fieldWidth = fieldWidth;
         this.fieldHeight = fieldHeight;
         this.size = size;
         this.barList = barList;
+        this.addSkilPointOfPlayer1 = addSkillPointOfPlayer1;
+        this.addSkilPointOfPlayer2 = addSkillPointOfPlayer2;
+        this.decreaseLifeOfPlayer1 = decreaseLifeOfPlayer1;
+        this.decreaseLifeOfPlayer2 = decreaseLifeOfPlayer2;
     }
 
     private static final long serialVersionUID = 519036451420326212L;
@@ -39,35 +54,49 @@ public class Ball extends BongPanel {
     public int X() { return x; }
     public int Y() { return y; }
     public int Size() { return size; }
-  
-    private void update() {
-        int ballY = (this.y + this.height) /2;
+
+    private void refrectBallByBar() {
+        int ballY = this.y + this.height / 2;
+        int ballX = this.x + this.width / 2;
         Bar bar1 = barList.get(0);
         if (bar1.Y() <= ballY && ballY <= bar1.Y() + bar1.Height()
-            && bar1.X() <= this.x && this.x <= bar1.X() + bar1.Width() + 10)
+            && bar1.X() <= ballX && ballX <= bar1.X() + bar1.Width())
         {
-            System.out.printf("bar: %d %d\n", bar1.X(), bar1.Y());
-            System.out.printf("ball: %d %d", this.X(), this.Y());
             SoundPlayer successSound = new SoundPlayer("./Sounds/shot.wav");
+            if (this.currentBallOwner != PlayerType.Player1) {
+                this.addSkilPointOfPlayer1.run();
+                this.currentBallOwner = PlayerType.Player1;
+            }
             successSound.play();
             this.dy *= -1;
-            this.dx *= -1;
+            this.dx *= -2;
         }
         Bar bar2 = barList.get(1);
-        int ballX = this.x + this.width;
         if (bar2.Y() <= ballY && ballY <= bar2.Y() + bar2.Height()
-            && bar2.X() - 10 <=  ballX && ballX <= bar2.X())
+            && bar2.X() <= ballX && ballX <= bar2.X() + bar2.Width())
         {
             SoundPlayer successSound = new SoundPlayer("./Sounds/shot.wav");
+            if (this.currentBallOwner != PlayerType.Player2) {
+                this.addSkilPointOfPlayer2.run();
+                this.currentBallOwner = PlayerType.Player2;
+            }
             successSound.play();
-            this.dx = -1;
             this.dy *= -1;
+            this.dx *= -2;
         }
-
+    }
+    
+    private void refrectBallByWall() {
         if (this.x + this.width >= this.fieldWidth) {
             this.dx = -1;
-            SoundPlayer missSound = new SoundPlayer("./Sounds/miss.wav");
-            missSound.play();
+            if (this.currentBallOwner != PlayerType.Player2) {
+                this.decreaseLifeOfPlayer2.run();
+                SoundPlayer missSound = new SoundPlayer("./Sounds/miss.wav");
+                missSound.play();
+            } else {
+                SoundPlayer wallSound = new SoundPlayer("./Sounds/reflect.wav");
+                wallSound.play();
+            }
         }
         else if (this.y + this.height >= this.fieldHeight) {
             this.dy = -1;
@@ -76,23 +105,53 @@ public class Ball extends BongPanel {
         }
         else if (this.x <= 0) {
             this.dx = 1;
-            SoundPlayer missSound = new SoundPlayer("./Sounds/miss.wav");
-            missSound.play();
+            if (this.currentBallOwner != PlayerType.Player1) {
+                this.decreaseLifeOfPlayer1.run();
+                SoundPlayer missSound = new SoundPlayer("./Sounds/miss.wav");
+                missSound.play();
+            } else {
+                SoundPlayer wallSound = new SoundPlayer("./Sounds/reflect.wav");
+                wallSound.play();
+            }
         }
         else if (this.y <= 0) {
             this.dy = 1;
             SoundPlayer wallSound = new SoundPlayer("./Sounds/reflect.wav");
             wallSound.play();
         }
+    }
+    
+    public void hiddenIfNeed(PlayerType playerType) {
+        this.hidden = playerType;
+    }
+    
+    public void showIfNeed() {
+        this.hidden = PlayerType.DEFAULT;
+    }
+    
+    private void update() {
+        this.refrectBallByBar();
+        this.refrectBallByWall();
+        if (dx == 6) dx = 1;
+        if (dx == -6) dx = -1;
         this.x += (dx * speed);
         this.y += (dy * speed);
     }
     
     @Override
     protected void paintBackground(Graphics2D g2d) {
-        this.setBounds(x, y, this.width, this.height);
         this.update();
+        this.setBounds(x, y, this.width, this.height);
+        Color centorColor = this.currentBallOwner == PlayerType.Player1 ? Color.BLUE : Color.RED;
+        if ((this.hidden == PlayerType.Player1 && this.currentBallOwner == PlayerType.Player1)
+            || (this.hidden == PlayerType.Player2 && this.currentBallOwner == PlayerType.Player2))
+        {
+            centorColor = Color.DARK_GRAY;
+        }
+        Color color = this.hidden == PlayerType.DEFAULT ? this.color : Color.DARK_GRAY;
         g2d.setColor(color);
         g2d.fillOval(0, 0, this.width, this.height);
+        g2d.setColor(centorColor);
+        g2d.fillOval(4, 4, this.width -8, this.height -8);
     }
 }

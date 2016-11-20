@@ -34,19 +34,41 @@ public class Status extends BongPanel {
         g2d.fillRect(0, 0, this.width, this.height);
     }
     
-    private int colorForAnimation = 200;
+    public void increaseSkillPoint() {
+        if (this.power < GAGE_MAX_RANGE) this.power++;
+    }
+    
+    private boolean isExecuteSkill = false;
+    private Runnable showBall;
+    public boolean executeHiddenBall(Runnable showBall) {
+        if (this.power == GAGE_MAX_RANGE && !this.isExecuteSkill) this.isExecuteSkill = true;
+        this.showBall = showBall;
+        return this.isExecuteSkill;
+    }
+    
+    private int colorForAnimation = 50;
+    private int powerHeight = 0;
     private void paintGauge(Graphics2D g2d) {
         Color color = playerType == PlayerType.Player1 ? Color.BLUE : Color.RED;
         if (power == GAGE_MAX_RANGE) {
-            colorForAnimation += 2;
+            colorForAnimation += 6;
             colorForAnimation %= 255;
-            if (colorForAnimation < 200) colorForAnimation = 200;
+            if (colorForAnimation < 50) colorForAnimation = 50;
             color = playerType == PlayerType.Player1
-                    ? new Color(0,0,colorForAnimation)
-                    : new Color(colorForAnimation,0,0);
+                    ? new Color(50, 50 ,colorForAnimation)
+                    : new Color(colorForAnimation, 50, 50);
+        }
+        if (this.isExecuteSkill) {
+            this.powerHeight -= 2;
+            if (this.powerHeight <= 0) {
+                this.power = 0;
+                this.isExecuteSkill = false;
+                if (this.showBall != null) showBall.run();
+            }
+        } else {
+            powerHeight = power * (this.height / GAGE_MAX_RANGE);
         }
         g2d.setColor(color);
-        final int powerHeight = power * (this.height / GAGE_MAX_RANGE);
         g2d.fillRect(0, this.height - powerHeight, this.width, powerHeight);
     }
 }

@@ -16,7 +16,8 @@ public class Field extends BongPanel {
     private final static int BALL_SIZE = 40;
     private final static int LANE_NUMBER = 5;
 
-    public Field(int x, int y, int width, int height) {
+    public Field(int x, int y, int width, int height, ArrayList<Status> statusList,
+            Runnable decreaseLifeOfPlayer1, Runnable decreaseLifeOfPlayer2) {
         super(x, y, width, height);
         this.barList = new ArrayList<Bar>();
         final Dimension fieldSize = new Dimension(this.width, this.height);
@@ -25,8 +26,12 @@ public class Field extends BongPanel {
         barList.add(barPlayer1);
         barList.add(barPlayer2);
         for (Bar bar: barList) this.add(bar);
+        Runnable addSkillPointOfPlayer1 = () -> statusList.get(0).increaseSkillPoint();
+        Runnable addSkillPointOfPlayer2 = () -> statusList.get(1).increaseSkillPoint();
         this.ball = new Ball(this.width / 2 - BALL_SIZE / 2, this.height / 2 - BALL_SIZE / 2,
-                BALL_SIZE, BALL_SIZE, this.width, this.height, BALL_SIZE, barList);
+                BALL_SIZE, BALL_SIZE, this.width, this.height, BALL_SIZE, barList,
+                addSkillPointOfPlayer1, addSkillPointOfPlayer2,
+                decreaseLifeOfPlayer1, decreaseLifeOfPlayer2);
         this.add(this.ball);
         this.laneList = new ArrayList<Lane>();
         final int laneRange = this.height / LANE_NUMBER;
@@ -49,6 +54,18 @@ public class Field extends BongPanel {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         this.paintBackground(g2d);
+    }
+    
+    public void showBall() {
+        this.ball.showIfNeed();
+    }
+
+    public void hiddenBallByPlayer1() {
+        this.ball.hiddenIfNeed(PlayerType.Player1);
+    }
+
+    public void hiddenBallByPlayer2() {
+        this.ball.hiddenIfNeed(PlayerType.Player2);
     }
     
     @Override
