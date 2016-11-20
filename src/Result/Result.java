@@ -28,6 +28,7 @@ public class Result extends BongPanel {
     }
     
     private Font font = new Font("SansSerif", Font.BOLD, 160);
+    private Font descriptionFont = new Font("SansSerif", Font.BOLD, 30);
     @Override
     protected void paintBackground(Graphics2D g2d) {
         Color color = this.playerType == PlayerType.Player1 ? rightBlue : rightRed;
@@ -37,6 +38,9 @@ public class Result extends BongPanel {
         g2d.setFont(font);
         g2d.setColor(Color.BLACK);
         g2d.drawString(playerName + "の勝利", 0, this.height / 2 - 80);
+        g2d.setFont(descriptionFont);
+        g2d.setColor(Color.DARK_GRAY);
+        g2d.drawString("Enter Key で タイトルに戻ります．", 0, this.height - 50);
     }
 
 }

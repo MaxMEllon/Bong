@@ -114,9 +114,10 @@ public class GameApplet extends JApplet implements Runnable, KeyListener {
             if (65 <= e.getKeyCode() && e.getKeyCode() <= 87) this.activeKeyForPlayer1 = e.getKeyCode();
             if (37 <= e.getKeyCode() && e.getKeyCode() <= 47) this.activeKeyForPlayer2 = e.getKeyCode();
         } else if (this.state == GameState.RESULT) {
-            sleep(2000);
-            this.state = GameState.TITLE;
-            sleep(1000);
+            if (e.getKeyCode() == 10) {
+                sleep(1000);
+                this.state = GameState.TITLE;
+            }
         }
     }
 
