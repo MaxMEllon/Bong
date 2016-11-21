@@ -19,7 +19,7 @@ public class Main {
             gameFrame.pack();
             gameFrame.setBounds(0, 0, 1300, 650);
             sleep(1000);
-            scheduler.scheduleAtFixedRate(gameApplet, 0, 30, TimeUnit.MILLISECONDS);
+            scheduler.scheduleAtFixedRate(gameApplet, 0, 100, TimeUnit.MILLISECONDS);
             gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         });
     }
