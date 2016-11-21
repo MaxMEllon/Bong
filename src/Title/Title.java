@@ -20,7 +20,7 @@ public class Title extends BongPanel {
         super.paintComponent(g);
         this.setSize(new Dimension(this.width, this.height));
         Graphics2D g2d = (Graphics2D) g;
-        this.drawLine(g2d);
+        this.drawLogo(g2d);
         this.paintBackground(g2d);
         this.drawTitle(g2d);
         this.drawDescription(g2d);
@@ -46,25 +46,11 @@ public class Title extends BongPanel {
         g2d.setColor(color);
     }
     
-    private int animateLineHeight = 200;
-    private int animateLineWidth = 50;
-    private int dx = 1;
-    private int dy = 1;
-    private int speed = 5;
-    private int baseX = 200;
-    private int baseY = 180;
-
-    private void drawLine(Graphics2D g2d) {
+    private void drawLogo(Graphics2D g2d) {
         g2d.setColor(Color.RED);
-        g2d.fillOval(this.width / 4, this.height / 4, animateLineWidth, animateLineHeight);
+        g2d.fillOval(this.width / 2, this.height - 200, 1000, 1000);
         g2d.setColor(Color.GREEN);
-        g2d.fillOval(this.width / 4 + 300, this.height / 4 + 100, animateLineWidth, animateLineHeight);
-        this.animateLineWidth += (dx * speed);
-        this.animateLineHeight += (dy * speed);
-        if (this.animateLineWidth >= this.width) dx *= -1;
-        if (this.animateLineHeight >= this.width) dy *= -1;
-        if (this.animateLineWidth <= 30) dx *= -1;
-        if (this.animateLineHeight <= 30) dy *= -1;
+        g2d.fillOval(this.width / 3, this.height - 100, 1000, 1000);
     }
 
     private void drawTitle(Graphics2D g2d) {

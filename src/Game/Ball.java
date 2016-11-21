@@ -144,14 +144,23 @@ public class Ball extends BongPanel {
     public void showIfNeed() {
         this.hidden = PlayerType.DEFAULT;
     }
+
+    private void sleep(int msec) {
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     
-    private void update() {
+    private synchronized void update() {
         this.refrectBallByBar();
         this.refrectBallByWall();
         if (Math.abs(dx) >= 6) this.dx = dx < 0 ? -1 : 1;
         if (Math.abs(dy) >= 2) this.dy = dy < 0 ? -1 : 1;
         this.x += (dx * speed);
         this.y += (dy * speed);
+        this.sleep(10);
     }
     
     @Override
